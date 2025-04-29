@@ -114,7 +114,7 @@ Create the following routes as efficiently as possible, using validation where a
 ![img.png](src/main/resources/static/25.png)
 5. **Update patient information**: Create a route to update patient information (the user should be able to update any patient information through this route).
 
-![img.png](img.png)
+![img.png](src/main/resources/static/26.png)
 6. **Write a short answer in README.md**. In your `README.md`, write a short answer to the following questions:
 
     - Did you use the same type of route to update patient information as to update an employee's department?
