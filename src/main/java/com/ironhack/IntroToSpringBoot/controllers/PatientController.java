@@ -4,10 +4,12 @@ import com.ironhack.IntroToSpringBoot.models.Employee;
 import com.ironhack.IntroToSpringBoot.models.Patient;
 import com.ironhack.IntroToSpringBoot.repositories.EmployeeRepository;
 import com.ironhack.IntroToSpringBoot.repositories.PatientRepository;
+import com.ironhack.IntroToSpringBoot.services.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ public class PatientController {
 
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    private PatientService patientService;
 
     public PatientController(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
@@ -74,7 +78,7 @@ public class PatientController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Patients retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Patients not found")})
     public List<Patient> findByAdmittedByDepartmentAndAdmittedBy(@PathVariable String admittedByDepartment, @PathVariable int admittedBy) {
-        Employee employee = employeeRepository.findByEmployeeId(admittedBy);
+        Employee employee = employeeRepository.findByEmployeeId(admittedBy).orElseThrow(() -> new RuntimeException("Employee not found"));
         return patientRepository.findByAdmittedBy_DepartmentAndAdmittedBy(admittedByDepartment, employee);
     }
 
@@ -88,4 +92,23 @@ public class PatientController {
         String statusOFF = "OFF";
         return patientRepository.findByAdmittedBy_Status(statusOFF);
     }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create a new patient")
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Patient created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid patient data")})
+    public Patient createPatient(@RequestBody @Valid Patient patient) {
+        return patientRepository.save(patient);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update a patient")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Patient updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Patient not found")})
+    public Patient updatePatient(@PathVariable int id, @RequestBody @Valid Patient patient) {
+      return patientService.updatePatient(id, patient);
+    }
+
 }

@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
+public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
     List<Patient> findAll();
 

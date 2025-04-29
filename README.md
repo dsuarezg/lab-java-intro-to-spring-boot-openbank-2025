@@ -8,6 +8,14 @@ We have just learned how to create GET as well as how to handle query parameters
 
 <br>
 
+# LAB Java | Add and Update
+
+## Introduction
+
+We have just learned how to use POST and PUT requests so let's practice a bit more.
+
+<br>
+
 ## Requirements
 
 1. Fork this repo.
@@ -87,7 +95,45 @@ Patient Table
 10. **Get all patients with a doctor whose status is OFF:** Create a route to get all patients with a doctor whose `status` is OFF.
 
 ![img.png](src/main/resources/static/9.png)
-<br>
+
+## Part II
+![img.png](src/main/resources/static/swagger2.png)
+Create the following routes as efficiently as possible, using validation where appropriate:
+
+1. **Add new patient**: Create a route to add a new patient.
+
+![img.png](src/main/resources/static/21.png)
+2. **Add new doctor**: Create a route to add a new doctor.
+
+![img.png](src/main/resources/static/22.png)
+3. **Change doctor status**: Create a route to change a doctor's status.
+
+![img.png](src/main/resources/static/23.png)
+4. **Update doctor's department**: Create a route to update a doctor's department.
+
+![img.png](src/main/resources/static/25.png)
+5. **Update patient information**: Create a route to update patient information (the user should be able to update any patient information through this route).
+
+![img.png](img.png)
+6. **Write a short answer in README.md**. In your `README.md`, write a short answer to the following questions:
+
+    - Did you use the same type of route to update patient information as to update an employee's department?
+      No, I used `PATCH` to update the employee's department and `PUT` to update the patient information.
+   
+    - Why did you choose the selected strategy?
+      PATCH is used to apply partial modifications to a resource, while PUT is used to update the entire resource. 
+      Since the patient information can be updated partially, I chose PATCH for that. For the employee's department, 
+      I used PUT because it requires updating the entire resource.
+   
+    - What are the advantages and disadvantages of the strategies you chose for creating these routes?
+      For the `PATCH` method, the advantage is that it allows for partial updates, which can be more efficient in terms of data transfer.
+      But, in case of a large number of fields, it can be more complex and better to use `PUT` to update the entire resource.
+   
+    - What is the cost-benefit between using `PUT` and `PATCH`?
+      Maybe the balance between development time and performance.
+
+
+
 
 ## Additional Testing Reminder
 
