@@ -70,7 +70,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName("GET /employees")
+    @DisplayName("GET /employee")
     public void getAllEmployees() throws Exception {
         Employee employee1 = new Employee(155438, "cardiology", "Jane Doe", "ON");
         Employee employee2 = new Employee(155439, "immunology", "James Doe", "OFF");
@@ -87,6 +87,34 @@ public class EmployeeControllerTest {
         assertTrue(responseJson.contains("James Doe"));
         assertTrue(responseJson.contains("cardiology"));
         assertTrue(responseJson.contains("immunology"));
+    }
+
+    @Test
+    @DisplayName("GET /employee/status/{status}")
+    public void getEmployeeByStatus() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/employee/status/OFF")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseJson = result.getResponse().getContentAsString();
+        assertTrue(responseJson.contains("Ruiz"));
+        assertTrue(responseJson.contains("Armes"));
+    }
+
+    @Test
+    @DisplayName("GET /employee/department/{department}")
+    public void getEmployeeByDepartment() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/employee/department/cardiology")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseJson = result.getResponse().getContentAsString();
+        assertTrue(responseJson.contains("Ruiz"));
+        assertTrue(responseJson.contains("Flores"));
     }
 
     @Test

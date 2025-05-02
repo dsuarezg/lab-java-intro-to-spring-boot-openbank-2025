@@ -8,12 +8,6 @@ import com.ironhack.IntroToSpringBoot.repositories.PatientRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.junit.jupiter.api.AfterEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -24,15 +18,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class PatientControllerTest {
+class PatientControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -55,7 +47,7 @@ public class PatientControllerTest {
     @AfterEach
     public void deletePatient() {
         // comprobar si existe
-        Optional <Patient> patient = patientRepository.findByName("John Doe");
+        Optional<Patient> patient = patientRepository.findByName("John Doe");
         System.out.println("EXISTE EL PACIENTE? " + patient.isPresent());
         // si existe borrarlo
         if (patient.isPresent()) {
@@ -64,6 +56,85 @@ public class PatientControllerTest {
         }
     }
 
+    @Test
+    @DisplayName("GET /patient")
+    public void getAllPatients() throws Exception {
+        Employee employee = new Employee(155438, "cardiology", "Jane Doe", "ON");
+        employeeRepository.save(employee);
+
+        Patient patient1 = new Patient("John Doe", new Date(), employee);
+        Patient patient2 = new Patient("Jack Smith", new Date(), employee);
+        patientRepository.save(patient1);
+        patientRepository.save(patient2);
+
+        MvcResult result = mockMvc.perform(get("/patient")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseJson = result.getResponse().getContentAsString();
+        assertTrue(responseJson.contains("John Doe"));
+        assertTrue(responseJson.contains("Smith"));
+    }
+
+    @Test
+    @DisplayName("GET /patient/{id}")
+    public void getPatientById() throws Exception {
+        Employee employee = new Employee(155438, "cardiology", "Jane Doe", "ON");
+        employeeRepository.save(employee);
+
+        Patient patient = new Patient("John Doe", new Date(), employee);
+        patientRepository.save(patient);
+
+        MvcResult result = mockMvc.perform(get("/patient/" + patient.getPatientId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseJson = result.getResponse().getContentAsString();
+        assertTrue(responseJson.contains("John Doe"));
+    }
+
+    @Test
+    @DisplayName("GET /patient/date/{date}/{date}")
+    public void findByDateOfBirthBetween() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/patient/date/1950-01-01/1990-01-01")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseJson = result.getResponse().getContentAsString();
+        assertTrue(responseJson.contains("Dusterdieck"));
+        assertTrue(responseJson.contains("Garcia"));
+        assertTrue(responseJson.contains("Jordán"));
+    }
+
+    @Test
+    @DisplayName("GET /patient/{admittedByDepartment}/{admittedBy}")
+    public void findByAdmittedByDepartmentAndAdmittedBy() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/patient/cardiology/156545")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseJson = result.getResponse().getContentAsString();
+        assertTrue(responseJson.contains("Paquito"));
+        assertTrue(responseJson.contains("Carlos"));
+    }
+
+    @Test
+    @DisplayName("GET /patient/status")
+    void findByAdmittedByStatusAndAdmittedBy() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/patient/status")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseJson = result.getResponse().getContentAsString();
+        assertTrue(responseJson.contains("Garcia"));
+        assertTrue(responseJson.contains("Steve"));
+    }
 
     @Test
     @DisplayName("POST /patient")
@@ -76,8 +147,8 @@ public class PatientControllerTest {
         String patientJson = objectMapper.writeValueAsString(patient);
 
         MvcResult result = mockMvc.perform(post("/patient")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(patientJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(patientJson))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -86,7 +157,22 @@ public class PatientControllerTest {
         assertTrue(responseJson.contains("John Doe"));
     }
 
+    @Test
+    @DisplayName("PUT /patient/{id}")
+    void updatePatient() throws Exception {
 
+        Employee employee = employeeRepository.findByEmployeeId(155438).orElseThrow(() -> new RuntimeException("Employee not found"));
 
+        Patient patient = new Patient("John Done", new Date(), employee);
+        String patientJson = objectMapper.writeValueAsString(patient);
 
+        MvcResult result = mockMvc.perform(put("/patient/17")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(patientJson))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("John Done"));
+
+    }
 }
