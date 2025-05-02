@@ -1,5 +1,6 @@
 package com.ironhack.IntroToSpringBoot.controllers;
 
+import com.ironhack.IntroToSpringBoot.exceptions.PatientNotFoundException;
 import com.ironhack.IntroToSpringBoot.models.Employee;
 import com.ironhack.IntroToSpringBoot.models.Patient;
 import com.ironhack.IntroToSpringBoot.repositories.EmployeeRepository;
@@ -19,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/patient")
@@ -51,7 +53,7 @@ public class PatientController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Patient retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Patient not found")})
     public Patient findByPatientId(@PathVariable int id) {
-        return patientRepository.findByPatientId(id);
+        return patientRepository.findByPatientId(id).orElseThrow(() -> new PatientNotFoundException("Patient not found with ID: " + id));
     }
 
     @GetMapping("/date/{from}/{to}")
@@ -107,7 +109,7 @@ public class PatientController {
     @Operation(summary = "Update a patient")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Patient updated successfully"),
             @ApiResponse(responseCode = "404", description = "Patient not found")})
-    public Patient updatePatient(@PathVariable int id, @RequestBody @Valid Patient patient) {
+    public Optional<Patient> updatePatient(@PathVariable int id, @RequestBody @Valid Patient patient) {
       return patientService.updatePatient(id, patient);
     }
 
