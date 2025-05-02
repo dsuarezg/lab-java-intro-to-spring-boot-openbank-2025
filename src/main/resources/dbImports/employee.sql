@@ -1,0 +1,10 @@
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (15543, 'cardiology', 'Jane Doe', 'ON');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (155438, 'cardiology', 'Jane Doe', 'ON');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (155439, 'immunology', 'James Doe', 'OFF');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (156545, 'cardiology', 'Paolo Rodriguez', 'ON');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (156549, 'inmunology', 'Pablo García', 'ON');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (166552, 'cardiology', 'Maria Lin', 'ON_CALL');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (172456, 'psychiatric', 'John Paul Armes', 'OFF');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (356712, 'cardiology', 'Alonso Flores', 'ON_CALL');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (564134, 'immunology', 'Sam Ortega', 'ON');
+INSERT INTO intro_to_spring.employee (employee_id, department, name, status) VALUES (761527, 'cardiology', 'German Ruiz', 'OFF');
