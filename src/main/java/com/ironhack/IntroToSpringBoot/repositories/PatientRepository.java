@@ -15,7 +15,7 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
     List<Patient> findAll();
 
-    Patient findByPatientId(int patientId);
+    Optional <Patient> findByPatientId(int patientId);
 
     List<Patient> findByDateOfBirthBetween(Date from, Date to);
 

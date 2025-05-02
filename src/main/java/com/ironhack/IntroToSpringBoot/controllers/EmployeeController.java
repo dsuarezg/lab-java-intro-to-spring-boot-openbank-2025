@@ -1,6 +1,7 @@
 package com.ironhack.IntroToSpringBoot.controllers;
 
 import com.ironhack.IntroToSpringBoot.dtos.EmployeePatchDTO;
+import com.ironhack.IntroToSpringBoot.exceptions.EmployeeNotFoundException;
 import com.ironhack.IntroToSpringBoot.models.Employee;
 import com.ironhack.IntroToSpringBoot.repositories.EmployeeRepository;
 import com.ironhack.IntroToSpringBoot.services.EmployeeService;
@@ -45,7 +46,7 @@ public class EmployeeController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Employee retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Employee not found")})
     public Employee findByEmployeeId(@PathVariable int id) {
-        return employeeRepository.findByEmployeeId(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        return employeeRepository.findByEmployeeId(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
     }
 
     @GetMapping("/status/{status}")
